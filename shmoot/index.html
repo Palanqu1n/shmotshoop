@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>shmot.shop — одяг</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--soft:#f1f1f0;--ink:#000;--mute:#767676;--line:#e3e3e1;--r:2px}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:Onest,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{max-width:1200px;margin:auto;padding:14px 24px;display:flex;align-items:center;gap:32px}
+.logo{font-weight:700;font-size:22px;letter-spacing:-.04em;text-decoration:none}
+.logo span{color:var(--mute);font-weight:300}
+nav{display:flex;gap:4px;margin-left:auto}
+nav button{padding:6px 12px;color:var(--mute);border-bottom:1px solid transparent}
+nav button[aria-selected=true]{color:var(--ink);border-color:var(--ink)}
+.cartbtn{padding:8px 14px;border:1px solid var(--ink);border-radius:var(--r);display:flex;gap:8px}
+.cartbtn b{font-weight:500}
+main{max-width:1200px;margin:auto;padding:0 24px 80px}
+.tab{display:none}.tab.on{display:block}
+.hero{padding:72px 0 48px;max-width:760px}
+.hero h1{font-size:clamp(40px,7vw,84px);line-height:1;letter-spacing:-.045em;font-weight:500}
+.hero p{margin-top:20px;color:var(--mute);max-width:420px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 28px}
+.chip{padding:6px 14px;border:1px solid var(--line);border-radius:99px;color:var(--mute)}
+.chip[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:40px 20px}
+.media{position:relative;aspect-ratio:4/5;background:var(--soft);overflow:hidden;border-radius:var(--r)}
+.media svg,.media img{position:absolute;inset:0;width:100%;height:100%}
+.media svg{padding:18%}
+.media img{object-fit:contain;padding:8%;mix-blend-mode:multiply;filter:brightness(1.15)}
+.media img.raw{filter:none}
+.add{position:absolute;left:12px;right:12px;bottom:12px;padding:10px;background:#fff;border-radius:var(--r);opacity:0;transform:translateY(6px);transition:.2s}
+.card:hover .add,.add:focus-visible{opacity:1;transform:none}
+@media(hover:none){.add{opacity:1;transform:none}}
+.card h3{font-weight:500;font-size:15px;margin-top:12px}
+.meta{display:flex;justify-content:space-between;color:var(--mute)}
+.sizes{display:flex;gap:6px;margin-top:8px}
+.sizes button{min-width:32px;padding:2px 6px;border:1px solid var(--line);border-radius:var(--r);font-size:13px;color:var(--mute)}
+.sizes button[aria-pressed=true]{border-color:var(--ink);color:var(--ink)}
+.page{padding:64px 0;max-width:640px}
+.page h2{font-size:clamp(32px,5vw,52px);letter-spacing:-.04em;font-weight:500;line-height:1.05;margin-bottom:28px}
+.page p{color:#333;margin-bottom:16px}
+.rows>div{display:flex;justify-content:space-between;gap:24px;padding:16px 0;border-top:1px solid var(--line)}
+.rows>div:last-child{border-bottom:1px solid var(--line)}
+.rows dt{color:var(--mute)}
+.rows a{text-decoration:none;font-weight:500}
+.rows a:hover{text-decoration:underline}
+footer{border-top:1px solid var(--line);padding:24px;text-align:center;color:var(--mute);font-size:13px}
+.shade{position:fixed;inset:0;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:.25s;z-index:30}
+.shade.on{opacity:1;pointer-events:auto}
+aside{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:#fff;z-index:40;transform:translateX(100%);transition:.3s;display:flex;flex-direction:column;padding:24px}
+aside.on{transform:none}
+aside h2{font-weight:500;font-size:22px;display:flex;justify-content:space-between;margin-bottom:16px}
+.items{flex:1;overflow:auto}
+.item{display:grid;grid-template-columns:64px 1fr auto;gap:14px;padding:14px 0;border-top:1px solid var(--line);align-items:center}
+.item .media{aspect-ratio:1}.item .media svg{padding:10%}
+.item small{color:var(--mute);display:block}
+.qty{display:flex;gap:10px;align-items:center;margin-top:4px}
+.qty button{width:24px;height:24px;border:1px solid var(--line);border-radius:50%;line-height:1}
+.empty{color:var(--mute);padding:24px 0}
+.total{display:flex;justify-content:space-between;font-weight:500;font-size:18px;padding:16px 0}
+.cta{width:100%;padding:14px;background:var(--ink);color:#fff;border-radius:var(--r);text-align:center;display:block;text-decoration:none}
+.cta[aria-disabled=true]{opacity:.3;pointer-events:none}
+.note{color:var(--mute);font-size:13px;margin-top:10px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:var(--r);opacity:0;transition:.25s;z-index:50;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media(max-width:700px){.bar{flex-wrap:wrap;gap:8px 16px;padding:12px 16px}nav{order:3;width:100%;margin:0;overflow-x:auto}.cartbtn{margin-left:auto}main{padding:0 16px 64px}.grid{gap:28px 12px;grid-template-columns:repeat(2,1fr)}.hero{padding:40px 0 28px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="logo" href="#catalog">shmot<span>.shop</span></a>
+  <nav role="tablist" aria-label="Розділи">
+    <button role="tab" data-tab="catalog">Каталог</button>
+    <button role="tab" data-tab="about">Про нас</button>
+    <button role="tab" data-tab="delivery">Доставка та оплата</button>
+    <button role="tab" data-tab="contacts">Контакти</button>
+  </nav>
+  <button class="cartbtn" id="openCart" aria-label="Відкрити кошик">Кошик <b id="count">0</b></button>
+</div></header>
+
+<main>
+<section class="tab" id="catalog">
+  <div class="hero"><h1>Одяг без зайвого.</h1><p>Базові речі з щільної бавовни та вовни. Нові надходження щомісяця.</p></div>
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section class="tab" id="about"><div class="page">
+  <h2>Про магазин</h2>
+  <p>shmot.shop — магазин базового одягу. Ми обираємо речі, які носять щодня: футболки, худі, штани, куртки та взуття.</p>
+  <p>У каталозі лише те, що ми перевірили самі: шви, тканину, посадку. Розмірна сітка в кожної речі одна, без сюрпризів.</p>
+</div></section>
+
+<section class="tab" id="delivery"><div class="page">
+  <h2>Доставка та оплата</h2>
+  <dl class="rows">
+    <div><dt>Кур'єр по місту</dt><dd>від 100 ₴, 1–2 дні</dd></div>
+    <div><dt>Нова пошта</dt><dd>за тарифами перевізника, 1–3 дні</dd></div>
+    <div><dt>Укрпошта</dt><dd>за тарифами перевізника, 3–7 днів</dd></div>
+    <div><dt>Безкоштовна доставка</dt><dd>від 2 500 ₴</dd></div>
+    <div><dt>Оплата</dt><dd>карткою або при отриманні</dd></div>
+    <div><dt>Повернення</dt><dd>14 днів, якщо річ не носили</dd></div>
+  </dl>
+</div></section>
+
+<section class="tab" id="contacts"><div class="page">
+  <h2>Контакти</h2>
+  <dl class="rows">
+    <div><dt>Телефон</dt><dd><a href="tel:+380972481585">+38 (097) 248-15-85</a></dd></div>
+    <div><dt>Другий телефон</dt><dd><a href="tel:+380681323625">+38 (068) 132-36-25</a></dd></div>
+    <div><dt>Telegram</dt><dd><a href="https://t.me/shmotshoop">@shmotshoop</a></dd></div>
+    <div><dt>Пошта</dt><dd><a href="mailto:alexxdmirtiev@gmail.com">alexxdmirtiev@gmail.com</a></dd></div>
+    <div><dt>Години роботи</dt><dd>щодня, 10:00–20:00</dd></div>
+  </dl>
+</div></section>
+</main>
+
+<footer>© <span id="yr"></span> shmot.shop · <a href="tel:+380972481585">+38 (097) 248-15-85</a></footer>
+
+<div class="shade" id="shade"></div>
+<aside id="cart" aria-label="Кошик" aria-hidden="true">
+  <h2>Кошик <button id="closeCart" aria-label="Закрити">✕</button></h2>
+  <div class="items" id="items"></div>
+  <div class="total"><span>Разом</span><span id="total">0 ₴</span></div>
+  <a class="cta" id="checkout" href="#" target="_blank" rel="noopener" aria-disabled="true">Оформити замовлення в Telegram</a>
+  <p class="note">Замовлення відкриється в Telegram готовим повідомленням. Ми підтвердимо наявність і зв'яжемося за телефоном.</p>
+</aside>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ====== НАЛАШТУВАННЯ ====== */
+const TELEGRAM = "shmotshoop"; // ваш Telegram без @
+/* Фото: покладіть файли в папку img/ поруч з index.html і вкажіть назву в полі img.
+   Поки файлу немає — показується ілюстрація речі. */
+const PRODUCTS = [
+ {id:1,name:"Футболка базова",cat:"Верх",price:699,type:"tee",color:"#d9d9d6",img:"img/tishka.jpg",sizes:["S","M","L","XL"]},
+ {id:2,name:"Худі оверсайз",cat:"Верх",price:1899,type:"hoodie",color:"#8b94a0",img:"img/khudi.jpg",sizes:["S","M","L","XL"]},
+ {id:3,name:"Лонгслів",cat:"Верх",price:999,type:"tee",color:"#2b2b2b",img:"img/long.jpg",sizes:["S","M","L"]},
+ {id:4,name:"Штани прямі",cat:"Низ",price:1599,type:"pants",color:"#b8ad9e",img:"img/pryami-shtany.jpg",sizes:["28","30","32","34"]},
+ {id:5,name:"Джинси вільні",cat:"Низ",price:1999,type:"pants",color:"#5a7394",img:"img/baggyjeans.jpg",sizes:["28","30","32","34"]},
+ {id:6,name:"Куртка-бомбер",cat:"Верх",price:3299,type:"jacket",color:"#4d5a46",img:"img/bomber.jpg",sizes:["S","M","L","XL"]},
+  {id:7,name:"Кросівки білі",cat:"Взуття",price:2699,type:"shoe",color:"#efefed",img:"img/nike-air-forse-1.jpg",raw:1,sizes:["40","41","42","43","44"]},
+ {id:8,name:"Кепка",cat:"Аксесуари",price:549,type:"cap",color:"#1f1f1f",img:"img/cap-black.jpg",sizes:["Універсальний"]}
+];
+const SHAPES={
+ tee:'<path d="M30 18 42 14Q50 22 58 14L70 18 88 36 78 46 70 40V86H30V40L22 46 12 36Z"/>',
+ hoodie:'<path d="M32 16Q50 6 68 16L90 40 92 70 80 72 72 48V88H28V48L20 72 8 70 10 40Z"/><path d="M40 14Q50 30 60 14" fill="none" stroke="#0003" stroke-width="2"/><path d="M36 66H64" stroke="#0003" stroke-width="2"/>',
+ pants:'<path d="M32 12H68L73 90H55L50 42 45 90H27Z"/>',
+ jacket:'<path d="M30 16 42 12Q50 18 58 12L70 16 92 34 86 66H76V86H24V66H14L8 34Z"/><path d="M50 18V86" stroke="#0003" stroke-width="2"/>',
+ shoe:'<path d="M8 60V44Q28 48 38 34L48 40Q58 52 82 54Q94 56 94 66V74H8Z"/><path d="M8 66H94" stroke="#0003" stroke-width="2"/>',
+ cap:'<path d="M16 62Q16 30 50 30T84 62Z"/><path d="M58 62H94Q94 70 80 70H58Z" opacity=".75"/>'
+};
+const svg=(t,c)=>`<svg viewBox="0 0 100 100" fill="${c}" aria-hidden="true">${SHAPES[t]}</svg>`;
+const media=p=>`<div class="media">${svg(p.type,p.color)}<img${p.raw?' class="raw"':''} src="${p.img}" alt="${p.name}" loading="lazy" onload="this.previousElementSibling.remove()" onerror="this.remove()"></div>`;
+const fmt=n=>n.toLocaleString("uk-UA")+" ₴";
+const $=s=>document.querySelector(s);
+
+/* ====== ВКЛАДКИ ====== */
+const tabs=[...document.querySelectorAll("[data-tab]")];
+function showTab(){
+  let id=location.hash.slice(1); if(!document.getElementById(id)||!tabs.some(b=>b.dataset.tab===id))id="catalog";
+  document.querySelectorAll(".tab").forEach(s=>s.classList.toggle("on",s.id===id));
+  tabs.forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===id));
+  scrollTo(0,0);
+}
+tabs.forEach(b=>b.onclick=()=>location.hash=b.dataset.tab);
+addEventListener("hashchange",showTab);
+
+/* ====== КАТАЛОГ ====== */
+let filter="Усі";const pick={};
+const cats=["Усі",...new Set(PRODUCTS.map(p=>p.cat))];
+function renderChips(){
+  $("#chips").innerHTML=cats.map(c=>`<button class="chip" aria-pressed="${c===filter}" data-c="${c}">${c}</button>`).join("");
+  $("#chips").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{filter=b.dataset.c;renderChips();renderGrid()});
+}
+function renderGrid(){
+  $("#grid").innerHTML=PRODUCTS.filter(p=>filter==="Усі"||p.cat===filter).map(p=>{
+    const s=pick[p.id]||p.sizes[Math.min(1,p.sizes.length-1)];pick[p.id]=s;
+    return `<article class="card">${`<div style="position:relative">${media(p)}<button class="add" data-add="${p.id}">До кошика</button></div>`}
+      <h3>${p.name}</h3><div class="meta"><span>${p.cat}</span><span>${fmt(p.price)}</span></div>
+      <div class="sizes" role="group" aria-label="Розмір">${p.sizes.map(z=>`<button aria-pressed="${z===s}" data-size="${p.id}|${z}">${z}</button>`).join("")}</div></article>`}).join("");
+}
+$("#grid").onclick=e=>{
+  const a=e.target.closest("[data-add]"),z=e.target.closest("[data-size]");
+  if(z){const[id,s]=z.dataset.size.split("|");pick[id]=s;renderGrid()}
+  if(a){add(+a.dataset.add)}
+};
+
+/* ====== КОШИК ====== */
+let cart=[];
+try{cart=JSON.parse(localStorage.getItem("shmot-cart")||"[]")}catch(e){}
+const save=()=>{try{localStorage.setItem("shmot-cart",JSON.stringify(cart))}catch(e){}};
+function add(id){
+  const s=pick[id],it=cart.find(i=>i.id===id&&i.size===s);
+  it?it.qty++:cart.push({id,size:s,qty:1});
+  save();renderCart();toast("Додано до кошика");
+}
+function renderCart(){
+  cart=cart.filter(i=>PRODUCTS.some(p=>p.id===i.id));
+  const n=cart.reduce((a,i)=>a+i.qty,0),sum=cart.reduce((a,i)=>a+i.qty*PRODUCTS.find(p=>p.id===i.id).price,0);
+  $("#count").textContent=n;$("#total").textContent=fmt(sum);
+  $("#items").innerHTML=cart.length?cart.map((i,k)=>{const p=PRODUCTS.find(p=>p.id===i.id);
+    return `<div class="item">${media(p)}<div><b>${p.name}</b><small>Розмір ${i.size} · ${fmt(p.price)}</small>
+    <div class="qty"><button data-q="${k}|-1" aria-label="Менше">−</button>${i.qty}<button data-q="${k}|1" aria-label="Більше">+</button></div></div>
+    <span>${fmt(p.price*i.qty)}</span></div>`}).join(""):'<p class="empty">Кошик порожній. Оберіть речі в каталозі.</p>';
+  const c=$("#checkout");c.setAttribute("aria-disabled",!cart.length);
+  const text="Замовлення з shmot.shop:\n"+cart.map(i=>{const p=PRODUCTS.find(p=>p.id===i.id);return `${p.name}, ${i.size} × ${i.qty} = ${fmt(p.price*i.qty)}`}).join("\n")+"\nРазом: "+fmt(sum);
+  c.href=cart.length?`https://t.me/${TELEGRAM}?text=${encodeURIComponent(text)}`:"#";
+}
+$("#items").onclick=e=>{
+  const b=e.target.closest("[data-q]");if(!b)return;
+  const[k,d]=b.dataset.q.split("|");cart[k].qty+=+d;
+  if(cart[k].qty<1)cart.splice(k,1);
+  save();renderCart();
+};
+const cartEl=$("#cart"),shade=$("#shade");
+function drawer(on){cartEl.classList.toggle("on",on);shade.classList.toggle("on",on);cartEl.setAttribute("aria-hidden",!on);if(on)$("#closeCart").focus()}
+$("#openCart").onclick=()=>drawer(true);$("#closeCart").onclick=()=>drawer(false);shade.onclick=()=>drawer(false);
+addEventListener("keydown",e=>{if(e.key==="Escape")drawer(false)});
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1600)}
+
+$("#yr").textContent=new Date().getFullYear();
+renderChips();renderGrid();renderCart();showTab();
+</script>
+</body>
+</html>
